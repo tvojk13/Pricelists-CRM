@@ -1,0 +1,89 @@
+﻿@model Price_lists_CRM.Models.PricelistModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create new pricelist</h1>
+
+<div class="row">
+    <form asp-action="Create">
+
+        <div class="form-group d-flex justify-content-between mb-1">
+            <div class="d-flex">
+                <a asp-action="Index" class="btn btn-secondary me-2">Back to List</a>
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+            <div>
+                <button type="button" class="btn btn-warning" id="addFieldButton">Add New Field</button>
+            </div>
+        </div>
+
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Id" />
+
+        <div class="form-group">
+            <label asp-for="Title" class="fw-bold"></label>
+            <input asp-for="Title" class="form-control" />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="col-3">Title</th>
+                    <th class="col-6">Value</th>
+                    <th class="col-2">Type</th>
+                    <th class="col-2">Action</th>
+                </tr>
+            </thead>
+            <tbody id="tbodyCreate">
+            </tbody>
+        </table>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+<script>
+    document.getElementById('addFieldButton').addEventListener('click', function () {
+        var rowCount = document.getElementById('tbodyCreate').children.length;
+        var newRow = document.createElement('tr');
+        newRow.innerHTML = `
+                                            <td class="col-3">
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control" name="Columns[${rowCount}].Title" id="Columns_${rowCount}__Title" required />
+                                                    <span class="text-danger" data-valmsg-for="Columns[${rowCount}].Title" data-valmsg-replace="true"></span>
+                                                </div>
+                                            </td>
+                                            <td class="col-6">
+                                                <input type="text" class="form-control" name="Columns[${rowCount}].Value" />
+                                            </td>
+                                            <td class="col-2">
+                                                <select class="form-select" name="Columns[${rowCount}].Type" onchange="changeInputType(this)">
+                                                    <option value="text">Text</option>
+                                                    <option value="number">Number</option>
+                                                    <option value="date">Date</option>
+                                                </select>
+                                            </td>
+                                            <td class="col-2">
+                                                <button type="button" class="btn btn-danger btn-remove">Remove</button>
+                                            </td>
+                `;
+        document.getElementById('tbodyCreate').appendChild(newRow);
+    });
+
+    document.getElementById('tbodyCreate').addEventListener('click', function (event) {
+        if (event.target.classList.contains('btn-remove')) {
+            event.target.closest('tr').remove();
+        }
+    });
+
+    function changeInputType(selectElement) {
+        const row = selectElement.closest('tr');
+        const valueInput = row.querySelector('td:nth-child(2) input');
+        valueInput.type = selectElement.value;
+    }
+</script>

@@ -1,0 +1,50 @@
+﻿@model Price_lists_CRM.Models.PricelistModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details for @Html.DisplayFor(model => model.Title)</h1>
+
+<div class="form-group d-flex justify-content-between mb-1">
+    <div class="d-flex">
+        <a asp-action="Index" class="btn btn-secondary me-1">Back to List</a>
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
+    </div>
+    <div>
+        <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>
+    </div>
+</div>
+
+@if (Model.Columns != null && Model.Columns.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th class="col-1">Column</th>
+                <th class="col-10">Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var column in Model.Columns)
+            {
+                    <tr class="text-break">
+                    <td class="col-1">
+                        @Html.DisplayFor(c => column.Title)
+                    </td>
+                        <td class="col-10">
+                        @Html.DisplayFor(c => column.Value)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <h4 class="text mt-2">No columns available.</h4>
+}
+
+
+
+
